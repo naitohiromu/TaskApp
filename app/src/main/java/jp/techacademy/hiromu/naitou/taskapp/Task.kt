@@ -12,4 +12,5 @@ open class Task : RealmObject, Serializable {
     var title = "" // タイトル
     var contents = "" // 内容
     var date = "" // 日時
+    var category = "" //カテゴリ
 }
