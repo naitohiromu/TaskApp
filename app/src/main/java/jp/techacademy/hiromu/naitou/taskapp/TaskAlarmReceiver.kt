@@ -43,14 +43,14 @@ class TaskAlarmReceiver : BroadcastReceiver() {
         // EXTRA_TASKからTaskのidを取得して、 idからTaskのインスタンスを取得する
         val taskId = intent!!.getIntExtra(EXTRA_TASK, -1)
         // Realmデータベースとの接続を開く
-        val config = RealmConfiguration.create(schema = setOf(Task::class))
+        val config = RealmConfiguration.create(schema = setOf(Task2::class))
         val realm = Realm.open(config)
         // 引数のtaskIdに合致するタスクを検索
-        var task = realm.query<Task>("id==$taskId").first().find()
+        var task = realm.query<Task2>("id==$taskId").first().find()
 
         // タスクが見つからなかった場合の処理
         if (task == null) {
-            task = Task()
+            task = Task2()
             task.title = "task(id:$taskId) not found"
             Log.e("TaskApp", task.title)
         }

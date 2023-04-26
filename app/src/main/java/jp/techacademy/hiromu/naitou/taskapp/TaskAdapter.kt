@@ -9,7 +9,7 @@ import android.widget.TextView
 
 class TaskAdapter(context:Context): BaseAdapter() {
     private val layoutInflater: LayoutInflater
-    private var taskList = mutableListOf<Task>()
+    private var taskList = mutableListOf<Task2>()
 
     init {
         this.layoutInflater = LayoutInflater.from(context)
@@ -40,7 +40,7 @@ class TaskAdapter(context:Context): BaseAdapter() {
         return view
     }
 
-    fun updateTaskList(taskList: List<Task>) {
+    fun updateTaskList(taskList: List<Task2>) {
         // 一度クリアしてから新しいタスク一覧に入替
         this.taskList.clear()
         this.taskList.addAll(taskList)

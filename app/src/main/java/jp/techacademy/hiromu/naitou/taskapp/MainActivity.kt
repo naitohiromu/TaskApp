@@ -12,6 +12,7 @@ import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.core.app.NotificationManagerCompat
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
@@ -22,7 +23,7 @@ import io.realm.kotlin.query.Sort
 import jp.techacademy.hiromu.naitou.taskapp.databinding.ActivityMainBinding
 import kotlinx.coroutines.*
 
-const val EXTRA_TASK = "jp.techacademy.taro.kirameki.taskapp.TASK"
+const val EXTRA_TASK = "jp.techacademy.hiromu.naitou.taskapp.TASK2"
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -30,7 +31,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var taskAdapter: TaskAdapter
     private lateinit var realm: Realm
 
-    private val requestPermissonLauncher =
+    private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()){isGranted ->
             if(isGranted){
                 // 権限が許可された
@@ -55,7 +56,7 @@ class MainActivity : AppCompatActivity() {
             }else {
                 // 許可されていないので許可ダイアログを表示する
                 Log.d("ANDROID","許可されていない")
-                requestPermissonLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+                requestPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
             }
         } else {
             // APIレベル33以前のため、アプリ毎の通知設定を確認する
@@ -89,19 +90,24 @@ class MainActivity : AppCompatActivity() {
         taskAdapter = TaskAdapter(this)
         binding.listView.adapter = taskAdapter
 
+
         // ListViewをタップしたときの処理
         binding.listView.setOnItemClickListener { parent, _, position, _ ->
             // 入力・編集する画面に遷移させる
-            val task = parent.adapter.getItem(position) as Task
+            val task = parent.adapter.getItem(position) as Task2
             val intent = Intent(this, InputActivity::class.java)
             intent.putExtra(EXTRA_TASK, task.id)
             startActivity(intent)
         }
+        binding.searchBox.setOnSearchClickListener {
+
+        }
+
 
         // ListViewを長押ししたときの処理
         binding.listView.setOnItemLongClickListener { parent, _, position, _ ->
             // タスクを削除する
-            val task = parent.adapter.getItem(position) as Task
+            val task = parent.adapter.getItem(position) as Task2
 
             // ダイアログを表示する
             val builder = AlertDialog.Builder(this)
@@ -111,7 +117,7 @@ class MainActivity : AppCompatActivity() {
             builder.setPositiveButton("OK") { _, _ ->
                 realm.writeBlocking {
                     // タスクのIDに該当するデータを削除する
-                    val tasks = query<Task>("id==${task.id}").find()
+                    val tasks = query<Task2>("id==${task.id}").find()
                     tasks.forEach {
                         delete(it)
                     }
@@ -139,12 +145,13 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
+
         // Realmデータベースとの接続を開く
-        val config = RealmConfiguration.create(schema = setOf(Task::class))
+        val config = RealmConfiguration.create(schema = setOf(Task2::class))
         realm = Realm.open(config)
 
         // Realmからタスクの一覧を取得
-        val tasks = realm.query<Task>().sort("date", Sort.DESCENDING).find()
+        val tasks = realm.query<Task2>().sort("date", Sort.DESCENDING).find()
 
         // Realmが起動、または更新（追加、変更、削除）時にreloadListViewを実行する
         CoroutineScope(Dispatchers.Default).launch {
@@ -170,7 +177,7 @@ class MainActivity : AppCompatActivity() {
     /**
      * リストの一覧を更新する
      */
-    private suspend fun reloadListView(tasks: List<Task>) {
+    private suspend fun reloadListView(tasks: List<Task2>) {
         withContext(Dispatchers.Main) {
             taskAdapter.updateTaskList(tasks)
         }

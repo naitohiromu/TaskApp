@@ -4,7 +4,7 @@ import java.io.Serializable
 import io.realm.kotlin.types.RealmObject
 import io.realm.kotlin.types.annotations.PrimaryKey
 
-open class Task : RealmObject, Serializable {
+open class Task2 : RealmObject, Serializable {
     // idをプライマリーキーとして設定
     @PrimaryKey
     var id = 0

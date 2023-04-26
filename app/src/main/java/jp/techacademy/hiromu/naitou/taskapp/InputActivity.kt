@@ -23,7 +23,7 @@ class InputActivity : AppCompatActivity() {
     private lateinit var binding: ActivityInputBinding
 
     private lateinit var realm: Realm
-    private lateinit var task: Task
+    private lateinit var task: Task2
     private var calendar = Calendar.getInstance(Locale.JAPANESE)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,7 +47,7 @@ class InputActivity : AppCompatActivity() {
         val taskId = intent.getIntExtra(EXTRA_TASK, -1)
 
         // Realmデータベースとの接続を開く
-        val config = RealmConfiguration.create(schema = setOf(Task::class))
+        val config = RealmConfiguration.create(schema = setOf(Task2::class))
         realm = Realm.open(config)
 
         // タスクを取得または初期化
@@ -108,11 +108,11 @@ class InputActivity : AppCompatActivity() {
      */
     private fun initTask(taskId: Int) {
         // 引数のtaskIdに合致するタスクを検索
-        val findTask = realm.query<Task>("id==$taskId").first().find()
+        val findTask = realm.query<Task2>("id==$taskId").first().find()
 
         if (findTask == null) {
             // 新規作成の場合
-            task = Task()
+            task = Task2()
             task.id = -1
 
             // 日付の初期値を1日後に設定
@@ -153,7 +153,7 @@ class InputActivity : AppCompatActivity() {
             // 登録
 
             // 最大のid+1をセット
-            task.id = (realm.query<Task>().max("id", Int::class).find() ?: -1) + 1
+            task.id = (realm.query<Task2>().max("id", Int::class).find() ?: -1) + 1
             // 画面項目の値で更新
             task.title = title
             task.contents = content
