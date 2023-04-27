@@ -14,7 +14,7 @@
         android:layout_height="match_parent">
     </ListView>
 
-    <SearchView
+    <EditText
         android:id="@+id/search_box"
         android:layout_width="match_parent"
         android:layout_height="48dp"
@@ -24,6 +24,15 @@
         android:importantForAutofill="no"
         android:inputType="text"
         tools:ignore="VisualLintTextFieldSize" />
+
+    <Button
+        android:id="@+id/search_button"
+        android:layout_width="96dp"
+        android:layout_height="48dp"
+        android:text="検索"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true" />
+
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"

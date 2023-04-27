@@ -21,6 +21,12 @@
             android:exported="false" />
 
         <activity
+            android:name=".SearchActivity"
+            android:exported="false"
+            android:label="サーチ"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar" />
+        <activity
             android:name=".InputActivity"
             android:exported="false"
             android:label="タスク"

@@ -9,10 +9,12 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
+import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import android.widget.Toast
 import androidx.core.app.NotificationManagerCompat
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
@@ -99,10 +101,26 @@ class MainActivity : AppCompatActivity() {
             intent.putExtra(EXTRA_TASK, task.id)
             startActivity(intent)
         }
-        binding.searchBox.setOnSearchClickListener {
 
+        binding.searchButton.setOnClickListener{
+            val config = RealmConfiguration.create(schema = setOf(Task2::class))
+            val intent = Intent(this,SearchActivity::class.java)
+            realm = Realm.open(config)
+
+            Log.d("Android",realm.query<Task2>().find().toString())
+            //realm.query<Task2>().sort("date", Sort.DESCENDING).find()
         }
 
+            /*
+        binding.searchBox.isSubmitButtonEnabled = true
+        binding.searchBox.isIconified = true
+
+        binding.searchBox.setOnSearchClickListener{
+            Log.d("Android","test")
+            Toast.makeText(applicationContext,"Test",Toast.LENGTH_LONG).show()
+        }
+
+             */
 
         // ListViewを長押ししたときの処理
         binding.listView.setOnItemLongClickListener { parent, _, position, _ ->
@@ -183,3 +201,5 @@ class MainActivity : AppCompatActivity() {
         }
     }
 }
+
+
