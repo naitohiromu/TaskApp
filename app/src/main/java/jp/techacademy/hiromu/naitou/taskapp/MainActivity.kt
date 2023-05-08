@@ -15,6 +15,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.core.app.NotificationManagerCompat
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
@@ -22,6 +23,8 @@ import io.realm.kotlin.ext.query
 import io.realm.kotlin.notifications.InitialResults
 import io.realm.kotlin.notifications.UpdatedResults
 import io.realm.kotlin.query.Sort
+import io.realm.*
+import io.realm.kotlin.query.RealmResults
 import jp.techacademy.hiromu.naitou.taskapp.databinding.ActivityMainBinding
 import kotlinx.coroutines.*
 
@@ -92,7 +95,6 @@ class MainActivity : AppCompatActivity() {
         taskAdapter = TaskAdapter(this)
         binding.listView.adapter = taskAdapter
 
-
         // ListViewをタップしたときの処理
         binding.listView.setOnItemClickListener { parent, _, position, _ ->
             // 入力・編集する画面に遷移させる
@@ -102,30 +104,44 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        binding.searchButton.setOnClickListener{
-            val config = RealmConfiguration.create(schema = setOf(Task2::class))
-            val intent = Intent(this,SearchActivity::class.java)
-            realm = Realm.open(config)
-
-            Log.d("Android",realm.query<Task2>().find().toString())
-            //realm.query<Task2>().sort("date", Sort.DESCENDING).find()
-        }
-
-            /*
         binding.searchBox.isSubmitButtonEnabled = true
         binding.searchBox.isIconified = true
+        binding.searchBox.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean{
+                //Log.d("Android",binding.searchBox.query.toString())
+                val intent = Intent(this@MainActivity, SearchActivity::class.java)
+                intent.putExtra(EXTRA_TASK, binding.searchBox.query.toString())
+                startActivity(intent)
+                return false
+            }
 
-        binding.searchBox.setOnSearchClickListener{
-            Log.d("Android","test")
-            Toast.makeText(applicationContext,"Test",Toast.LENGTH_LONG).show()
-        }
+            override fun onQueryTextChange(newText: String?): Boolean {
 
-             */
-
+                return false
+            }
+        })
         // ListViewを長押ししたときの処理
         binding.listView.setOnItemLongClickListener { parent, _, position, _ ->
             // タスクを削除する
             val task = parent.adapter.getItem(position) as Task2
+
+            val tasktest: RealmResults<Task2> = realm.query<Task2>().find()
+
+            for(task_t in tasktest){
+                Log.d("Android",task_t.title)
+                Log.d("Android",task_t.id.toString())
+            }
+            //val tasktest = parent.adapter as Task2
+
+            //Log.d("task_test",task_test.id.toString())
+            //Log.d("Android",parent.toString())
+            //Log.d("Android",position.toString())
+            //Log.d("Android",task.title)
+            //Log.d("Android",task.id.toString())
+            //Log.d("Android",realm.query<Task2>().find().toString())
+            //Log.d("Android",parent.adapter.getItem(position).toString())
+            //Log.d("Android",realm.query<Task2>("title==title_test",task.title).find().toString())
+
 
             // ダイアログを表示する
             val builder = AlertDialog.Builder(this)
